@@ -1,0 +1,169 @@
+class Product {
+    int productId;
+    String productName;
+    double price;
+
+    public Product(int productId, String productName, double price) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product ID: " + productId + ", Name: " + productName + ", Price: $" + price;
+    }
+}
+
+class Node {
+    Product data;
+    Node next;
+
+    public Node(Product data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class SinglyLinkedList {
+    private Node head;
+
+    public SinglyLinkedList() {
+        head = null;
+    }
+
+    // Insert at the beginning
+    public void insertAtBeginning(Product data) {
+        Node newNode = new Node(data);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    // Insert at the end
+    public void insertAtEnd(Product data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+
+    // Insert at any position
+    public void insertAtPosition(Product data, int position) {
+        if (position <= 0) {
+            insertAtBeginning(data);
+            return;
+        }
+
+        Node newNode = new Node(data);
+        Node current = head;
+        int count = 0;
+
+        while (count < position - 1 && current != null) {
+            current = current.next;
+            count++;
+        }
+
+        if (current == null) {
+            System.out.println("Invalid position. Inserting at the end.");
+            insertAtEnd(data);
+        } else {
+            newNode.next = current.next;
+            current.next = newNode;
+        }
+    }
+
+    // Delete at the beginning
+    public void deleteAtBeginning() {
+        if (head != null) {
+            head = head.next;
+        }
+    }
+
+    // Delete at the end
+    public void deleteAtEnd() {
+        if (head == null || head.next == null) {
+            head = null;
+        } else {
+            Node current = head;
+            while (current.next.next != null) {
+                current = current.next;
+            }
+            current.next = null;
+        }
+    }
+
+    // Delete at any position
+    public void deleteAtPosition(int position) {
+        if (position <= 0) {
+            deleteAtBeginning();
+            return;
+        }
+
+        Node current = head;
+        Node prevNode = null;
+        int count = 0;
+
+        while (count < position && current != null) {
+            prevNode = current;
+            current = current.next;
+            count++;
+        }
+
+        if (current == null) {
+            System.out.println("Invalid position. Nothing to delete.");
+        } else {
+            prevNode.next = current.next;
+        }
+    }
+
+    // Display the linked list
+    public void display() {
+        if (head == null) {
+            System.out.println("List is empty.");
+            return;
+        }
+
+        Node current = head;
+        while (current != null) {
+            System.out.println(current.data);
+            current = current.next;
+        }
+    }
+
+    public static void main(String[] args) {
+        SinglyLinkedList productList = new SinglyLinkedList();
+
+        Product product1 = new Product(1, "Phone", 499.99);
+        Product product2 = new Product(2, "Laptop", 999.99);
+        Product product3 = new Product(3, "Tablet", 299.99);
+
+        productList.insertAtEnd(product1);
+        productList.insertAtEnd(product2);
+        productList.insertAtEnd(product3);
+
+        System.out.println("Product List:");
+        productList.display();
+
+        Product product4 = new Product(4, "Smartwatch", 199.99);
+        productList.insertAtBeginning(product4);
+
+        Product product5 = new Product(5, "Headphones", 79.99);
+        productList.insertAtPosition(product5, 2);
+
+        System.out.println("\nProduct List after Insertions:");
+        productList.display();
+
+        productList.deleteAtEnd();
+        productList.deleteAtBeginning();
+        productList.deleteAtPosition(1);
+
+        System.out.println("\nProduct List after Deletions:");
+        productList.display();
+    }
+}

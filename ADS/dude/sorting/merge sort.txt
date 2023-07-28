@@ -1,0 +1,68 @@
+public class MergeSort {
+
+    public static void mergeSort(int[] arr) {
+        if (arr == null || arr.length <= 1) {
+            return; // Base case: The array is already sorted or empty
+        }
+
+        int n = arr.length;
+        int mid = n / 2;
+
+        // Create two subarrays to hold the left and right halves
+        int[] leftArray = new int[mid];
+        int[] rightArray = new int[n - mid];
+
+        // Copy data to the subarrays
+        for (int i = 0; i < mid; i++) {
+            leftArray[i] = arr[i];
+        }
+        for (int i = mid; i < n; i++) {
+            rightArray[i - mid] = arr[i];
+        }
+
+        // Recursively sort the left and right subarrays
+        mergeSort(leftArray);
+        mergeSort(rightArray);
+
+        // Merge the sorted subarrays
+        merge(arr, leftArray, rightArray);
+    }
+
+    public static void merge(int[] arr, int[] leftArray, int[] rightArray) {
+        int leftLength = leftArray.length;
+        int rightLength = rightArray.length;
+        int i = 0, j = 0, k = 0;
+
+        // Compare elements from the left and right subarrays and merge them into the original array
+        while (i < leftLength && j < rightLength) {
+            if (leftArray[i] <= rightArray[j]) {
+                arr[k] = leftArray[i];
+                i++;
+            } else {
+                arr[k] = rightArray[j];
+                j++;
+            }
+            k++;
+        }
+
+        // Copy any remaining elements from the left and right subarrays, if any
+        while (i < leftLength) {
+            arr[k] = leftArray[i];
+            i++;
+            k++;
+        }
+        while (j < rightLength) {
+            arr[k] = rightArray[j];
+            j++;
+            k++;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {12, 11, 13, 5, 6, 7};
+        mergeSort(arr);
+        for (int num : arr) {
+            System.out.print(num + " ");
+        }
+    }
+}

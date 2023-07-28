@@ -1,0 +1,184 @@
+class Product {
+    int productId;
+    String productName;
+    double price;
+
+    public Product(int productId, String productName, double price) {
+        this.productId = productId;
+        this.productName = productName;
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product ID: " + productId + ", Name: " + productName + ", Price: $" + price;
+    }
+}
+
+class Node {
+    Product data;
+    Node prev;
+    Node next;
+
+    public Node(Product data) {
+        this.data = data;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+public class DoublyCircularLinkedList {
+    private Node head;
+
+    public DoublyCircularLinkedList() {
+        head = null;
+    }
+
+    // Insert at the beginning
+    public void insertAtBeginning(Product data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            head.next = head;
+            head.prev = head;
+        } else {
+            newNode.next = head;
+            newNode.prev = head.prev;
+            head.prev.next = newNode;
+            head.prev = newNode;
+            head = newNode;
+        }
+    }
+
+    // Insert at the end
+    public void insertAtEnd(Product data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            head.next = head;
+            head.prev = head;
+        } else {
+            newNode.next = head;
+            newNode.prev = head.prev;
+            head.prev.next = newNode;
+            head.prev = newNode;
+        }
+    }
+
+    // Insert at any position
+    public void insertAtPosition(Product data, int position) {
+        if (position <= 0) {
+            insertAtBeginning(data);
+            return;
+        }
+
+        Node newNode = new Node(data);
+        Node current = head;
+        int count = 0;
+
+        while (count < position - 1 && current.next != head) {
+            current = current.next;
+            count++;
+        }
+
+        newNode.next = current.next;
+        newNode.prev = current;
+        current.next.prev = newNode;
+        current.next = newNode;
+    }
+
+    // Delete at the beginning
+    public void deleteAtBeginning() {
+        if (head == null) {
+            return;
+        } else if (head.next == head) {
+            head = null;
+        } else {
+            head.prev.next = head.next;
+            head.next.prev = head.prev;
+            head = head.next;
+        }
+    }
+
+    // Delete at the end
+    public void deleteAtEnd() {
+        if (head == null) {
+            return;
+        } else if (head.next == head) {
+            head = null;
+        } else {
+            head.prev.prev.next = head;
+            head.prev = head.prev.prev;
+        }
+    }
+
+    // Delete at any position
+    public void deleteAtPosition(int position) {
+        if (head == null) {
+            return;
+        } else if (position <= 0) {
+            deleteAtBeginning();
+            return;
+        }
+
+        Node current = head;
+        int count = 0;
+
+        while (count < position && current.next != head) {
+            current = current.next;
+            count++;
+        }
+
+        if (current == head) {
+            deleteAtEnd();
+        } else {
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+        }
+    }
+
+    // Display the linked list
+    public void display() {
+        if (head == null) {
+            System.out.println("List is empty.");
+            return;
+        }
+
+        Node current = head;
+        do {
+            System.out.println(current.data);
+            current = current.next;
+        } while (current != head);
+    }
+
+    public static void main(String[] args) {
+        DoublyCircularLinkedList productList = new DoublyCircularLinkedList();
+
+        Product product1 = new Product(1, "Phone", 499.99);
+        Product product2 = new Product(2, "Laptop", 999.99);
+        Product product3 = new Product(3, "Tablet", 299.99);
+
+        productList.insertAtEnd(product1);
+        productList.insertAtEnd(product2);
+        productList.insertAtEnd(product3);
+
+        System.out.println("Product List:");
+        productList.display();
+
+        Product product4 = new Product(4, "Smartwatch", 199.99);
+        productList.insertAtBeginning(product4);
+
+        Product product5 = new Product(5, "Headphones", 79.99);
+        productList.insertAtPosition(product5, 2);
+
+        System.out.println("\nProduct List after Insertions:");
+        productList.display();
+
+        productList.deleteAtEnd();
+        productList.deleteAtBeginning();
+        productList.deleteAtPosition(1);
+
+        System.out.println("\nProduct List after Deletions:");
+        productList.display();
+    }
+}
